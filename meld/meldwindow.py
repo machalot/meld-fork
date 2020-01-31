@@ -612,15 +612,26 @@ class MeldWindow(Component):
                     merge_output=None, meta=None):
         have_directories = False
         have_files = False
-        for f in gfiles:
+        is_dir = []
+        fname = ''
+        for i, f in enumerate(gfiles):
             if f.query_file_type(
                Gio.FileQueryInfoFlags.NONE, None) == Gio.FileType.DIRECTORY:
                 have_directories = True
+                is_dir.append(True)
             else:
                 have_files = True
+                is_dir.append(False)
+                fname = f.get_basename()
         if have_directories and have_files:
-            raise ValueError(
-                _("Cannot compare a mixture of files and directories"))
+            if is_dir.count(False) != 1:
+                    raise ValueError(_('Only one argument can be a filename when all others are dirs'))
+            for i, f in enumerate(gfiles):
+                if is_dir[i]:
+                    fullpath = f.get_path() + os.path.sep + fname
+                    gfiles[i] = Gio.File.new_for_path(fullpath)
+            return self.append_filediff(
+                gfiles, merge_output=merge_output, meta=meta)
         elif have_directories:
             return self.append_dirdiff(gfiles, auto_compare)
         elif auto_merge:

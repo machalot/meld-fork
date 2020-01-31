@@ -188,6 +188,8 @@ class MeldApp(Gtk.Application):
              _("Start a version control comparison")),
             ("<%s> <%s> [<%s>]" % ((_("file"),) * 3),
              _("Start a 2- or 3-way file comparison")),
+            ("<%s> <%s> [<%s>]" % (_("file"), _("folder"), _("folder")),
+             _("Start a 2- or 3-way file comparison assuming same filename")),
             ("<%s> <%s> [<%s>]" % ((_("folder"),) * 3),
              _("Start a 2- or 3-way folder comparison")),
         ]
